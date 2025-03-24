@@ -44,4 +44,4 @@ jobs:
       - name: Run Tests (Jest)
         run: |
           npm test > test-error.log || echo "Test errors occurred" > test-error.log
-        continue-on-error: true ▋
+        continue-on-error: true
