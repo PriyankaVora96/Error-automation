@@ -1,11 +1,10 @@
 name: Copilot Review Integration
 
 on:
-  [push, pull_request]:
+  pull_request:
     branches:
       - main
       - develop
-      - poc-error-log
 
 jobs:
   copilot_review:
