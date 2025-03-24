@@ -16,11 +16,16 @@ jobs:
         uses: actions/checkout@v3
 
      
- # Install necessary dependencies (you may need to adjust this)
-     - name: Install Copilot CLI
-      run: |
-        npm install -g @githubnext/github-copilot-cli
+  # Install necessary dependencies (e.g., Copilot CLI)
+      - name: Install Copilot CLI
+        run: |
+          # Install GitHub Copilot CLI tool using npm
+          npm install -g @githubnext/github-copilot-cli
 
+ # Ensure the Copilot CLI is installed correctly by checking the version
+      - name: Check Copilot CLI Version
+        run: |
+          copilot --version  # This will confirm if Copilot CLI is correctly installed
 
       # Run Copilot code review or another tool (you would need to integrate a Copilot review tool here)
       - name: Run Copilot Review
