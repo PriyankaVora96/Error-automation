@@ -1,10 +1,11 @@
 name: Copilot Review Integration
 
 on:
-  pull_request:
+  [push, pull_request]:
     branches:
       - main
       - develop
+      - poc-error-log
 
 jobs:
   copilot_review:
@@ -15,19 +16,19 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v3
 
-      # Install necessary dependencies (you may need to adjust this)
-      # - name: Set up dependencies
-      #   run: |
-      #     # Install dependencies for Copilot or any other tools you're using
-      #     sudo apt-get update
-      #     sudo apt-get install -y some-dependency
+     
+ # Install necessary dependencies (you may need to adjust this)
+     - name: Install Copilot CLI
+      run: |
+        npm install -g @githubnext/github-copilot-cli
+
 
       # Run Copilot code review or another tool (you would need to integrate a Copilot review tool here)
       - name: Run Copilot Review
         id: copilot_review
         run: |
           # Example of running Copilot or another review tool on your files
-          result=$(copilot review --files .)
+          result=$(copilot review --repo . --output-format json)
           echo "::set-output name=review_result::$result"
 
       # Check for any errors and report failure if needed
