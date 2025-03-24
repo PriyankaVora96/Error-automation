@@ -11,7 +11,7 @@ on:
 jobs:
   lint:
     runs-on: ubuntu-latest  # Define the operating system for the CI job
-    
+
     steps:
       # Step 1: Checkout code from the repository
       - name: Checkout code
@@ -44,14 +44,4 @@ jobs:
       - name: Run Tests (Jest)
         run: |
           npm test > test-error.log || echo "Test errors occurred" > test-error.log
-        continue-on-error: true  # Continue even if tests fail
-
-      # Step 7: Upload error logs as artifacts (so they can be downloaded and reviewed)
-      - name: Upload error logs
-        uses: actions/upload-artifact@v2
-        with:
-          name: error-logs
-          path: |
-            eslint-error.log
-            prettier-error.log
-            test-error.log
+        continue-on-error: true ▋
