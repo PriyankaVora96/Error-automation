@@ -24,7 +24,7 @@ jobs:
       - name: Install Copilot CLI
         run: |
           # Download the Copilot CLI binary
-          curl -Lo copilot https://github.com/aws/copilot-cli/releases/download/v1.17.0/copilot-linux-amd64
+          curl -Lo copilot https://github.com/aws/copilot-cli/releases/latest/download/copilot-linux
           chmod +x copilot
           # Move Copilot CLI to a directory in PATH
           sudo mv copilot /usr/local/bin/copilot
