@@ -16,10 +16,11 @@ jobs:
         uses: actions/checkout@v3
 
       # Install necessary dependencies (you may need to adjust this)
-      - name: Set up dependencies
-        run: |
-          # Install dependencies for Copilot or any other tools you're using
-          sudo apt-get install -y some-dependency
+      # - name: Set up dependencies
+      #   run: |
+      #     # Install dependencies for Copilot or any other tools you're using
+      #     sudo apt-get update
+      #     sudo apt-get install -y some-dependency
 
       # Run Copilot code review or another tool (you would need to integrate a Copilot review tool here)
       - name: Run Copilot Review
