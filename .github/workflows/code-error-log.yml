@@ -15,12 +15,10 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v3
 
-     
- # Install necessary dependencies (you may need to adjust this)
-     - name: Install Copilot CLI
-      run: |
-        npm install -g @githubnext/github-copilot-cli
-
+      # Install necessary dependencies (you may need to adjust this)
+      - name: Install Copilot CLI
+        run: |
+          npm install -g @githubnext/github-copilot-cli
 
       # Run Copilot code review or another tool (you would need to integrate a Copilot review tool here)
       - name: Run Copilot Review
