@@ -1,0 +1,57 @@
+name: Code Quality Checks with Error Log
+
+on:
+  pull_request:
+    branches:
+      - main  # Trigger when a PR is created against the main branch
+  push:
+    branches:
+      - main  # Trigger when code is pushed to the main branch
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest  # Define the operating system for the CI job
+    
+    steps:
+      # Step 1: Checkout code from the repository
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      # Step 2: Set up Node.js for the project
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '16'  # Use Node.js version 16
+
+      # Step 3: Install dependencies
+      - name: Install dependencies
+        run: |
+          npm install  # Install dependencies defined in package.json
+
+      # Step 4: Run ESLint and capture errors in a log file
+      - name: Run ESLint (Linting)
+        run: |
+          npm run lint > eslint-error.log || echo "ESLint errors occurred" > eslint-error.log
+        continue-on-error: true  # This allows the job to continue even if ESLint fails
+
+      # Step 5: Run Prettier and capture errors in a log file
+      - name: Run Prettier (Formatting Check)
+        run: |
+          npm run format > prettier-error.log || echo "Prettier formatting errors occurred" > prettier-error.log
+        continue-on-error: true  # Continue even if Prettier fails
+
+      # Step 6: Run Tests and capture errors in a log file
+      - name: Run Tests (Jest)
+        run: |
+          npm test > test-error.log || echo "Test errors occurred" > test-error.log
+        continue-on-error: true  # Continue even if tests fail
+
+      # Step 7: Upload error logs as artifacts (so they can be downloaded and reviewed)
+      - name: Upload error logs
+        uses: actions/upload-artifact@v2
+        with:
+          name: error-logs
+          path: |
+            eslint-error.log
+            prettier-error.log
+            test-error.log
