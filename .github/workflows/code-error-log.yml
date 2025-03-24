@@ -1,47 +1,52 @@
-name: Code Quality Checks with Error Log
+name: Copilot Review Integration
 
 on:
   pull_request:
     branches:
-      - main  # Trigger when a PR is created against the main branch
-  push:
-    branches:
-      - main  # Trigger when code is pushed to the main branch
+      - main
+      - develop
 
 jobs:
-  lint:
-    runs-on: ubuntu-latest  # Define the operating system for the CI job
+  copilot_review:
+    runs-on: ubuntu-latest
 
     steps:
-      # Step 1: Checkout code from the repository
-      - name: Checkout code
-        uses: actions/checkout@v2
+      # Checkout the code
+      - name: Checkout Code
+        uses: actions/checkout@v3
 
-      # Step 2: Set up Node.js for the project
-      - name: Set up Node.js
-        uses: actions/setup-node@v2
-        with:
-          node-version: '16'  # Use Node.js version 16
+     
+ # Install necessary dependencies (you may need to adjust this)
+     - name: Install Copilot CLI
+      run: |
+        npm install -g @githubnext/github-copilot-cli
 
-      # Step 3: Install dependencies
-      - name: Install dependencies
+
+      # Run Copilot code review or another tool (you would need to integrate a Copilot review tool here)
+      - name: Run Copilot Review
+        id: copilot_review
         run: |
-          npm install  # Install dependencies defined in package.json
+          # Example of running Copilot or another review tool on your files
+          result=$(copilot review --repo . --output-format json)
+          echo "::set-output name=review_result::$result"
 
-      # Step 4: Run ESLint and capture errors in a log file
-      - name: Run ESLint (Linting)
+      # Check for any errors and report failure if needed
+      - name: Check for Review Errors
         run: |
-          npm run lint > eslint-error.log || echo "ESLint errors occurred" > eslint-error.log
-        continue-on-error: true  # This allows the job to continue even if ESLint fails
+          if [[ "${{ steps.copilot_review.outputs.review_result }}" == *"error"* ]]; then
+            echo "Error found during Copilot review!"
+            exit 1
+          else
+            echo "Copilot review passed successfully!"
+          fi
 
-      # Step 5: Run Prettier and capture errors in a log file
-      - name: Run Prettier (Formatting Check)
-        run: |
-          npm run format > prettier-error.log || echo "Prettier formatting errors occurred" > prettier-error.log
-        continue-on-error: true  # Continue even if Prettier fails
+  handle_errors:
+    runs-on: ubuntu-latest
+    needs: copilot_review
+    if: failure() # Only run this job if the previous job fails
 
-      # Step 6: Run Tests and capture errors in a log file
-      - name: Run Tests (Jest)
+    steps:
+      - name: Handle Errors
         run: |
-          npm test > test-error.log || echo "Test errors occurred" > test-error.log
-        continue-on-error: true ▋
+          echo "An error occurred during the Copilot review process!"
+          # Send a message or do any necessary error handling steps here, such as notifying on Slack, sending an email, etc.
