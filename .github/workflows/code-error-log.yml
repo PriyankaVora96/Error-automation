@@ -23,14 +23,13 @@ jobs:
       # Install necessary dependencies (e.g., Copilot CLI)
       - name: Install Copilot CLI
         run: |
+          # Download the Copilot CLI binary
           curl -Lo copilot https://github.com/aws/copilot-cli/releases/download/v1.17.0/copilot-linux-amd64
           chmod +x copilot
+          # Move Copilot CLI to a directory in PATH
           sudo mv copilot /usr/local/bin/copilot
-
-      # Ensure the Copilot CLI is installed correctly by checking the version
-      - name: Check Copilot CLI Version
-        run: |
-          copilot --version  # This will confirm if Copilot CLI is correctly installed
+          # Verify installation
+          copilot --version
 
       # Run Copilot code review or another tool (you would need to integrate a Copilot review tool here)
       - name: Run Copilot Review
@@ -46,7 +45,7 @@ jobs:
           if [[ "${{ steps.copilot_review.outputs.review_result }}" == *"error"* ]]; then
             echo "Error found during Copilot review!"
             exit 1
-          else:
+          else
             echo "Copilot review passed successfully!"
 
   handle_errors:
