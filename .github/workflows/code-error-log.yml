@@ -31,13 +31,19 @@ jobs:
           # Verify installation
           copilot --version
 
-      # Example: Running Copilot's `svc deploy` command (or another valid command)
+      # Run Copilot's `svc deploy` command and capture both stdout and stderr
       - name: Run Copilot Command
         id: copilot_command
         run: |
-          # Use a valid Copilot command instead of `review`
-          result=$(copilot svc deploy --name my-service --env test --output json)
+          echo "Running Copilot svc deploy..."
+          result=$(copilot svc deploy --name my-service --env test 2>&1)
+          echo "Command output: $result"
+          echo "$result" > error_log.txt
           echo "command_result=$result" >> $GITHUB_ENV
+          if [[ "$result" == *"error"* ]]; then
+            echo "Error found during Copilot command execution!"
+            exit 1
+          fi
 
       # Check for any errors and report failure if needed
       - name: Check for Command Errors
@@ -45,7 +51,7 @@ jobs:
           if [[ "${{ env.command_result }}" == *"error"* ]]; then
             echo "Error found during Copilot command execution!"
             exit 1
-          else
+          else:
             echo "Copilot command executed successfully!"
 
   handle_errors:
@@ -57,4 +63,7 @@ jobs:
       - name: Handle Errors
         run: |
           echo "An error occurred during the Copilot command execution process!" | tee error_log.txt
-          # Send a message or do any necessary error handling steps here, such as notifying on Slack, sending an email, etc.
+          # Print the error output from the previous job
+          echo "Previous job failed with the following error:"
+          cat error_log.txt
+          # Additional error handling actions like sending notifications can go here
