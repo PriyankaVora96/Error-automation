@@ -31,22 +31,22 @@ jobs:
           # Verify installation
           copilot --version
 
-      # Run Copilot code review or another tool (you would need to integrate a Copilot review tool here)
-      - name: Run Copilot Review
-        id: copilot_review
+      # Example: Running Copilot's `svc deploy` command (or another valid command)
+      - name: Run Copilot Command
+        id: copilot_command
         run: |
-          # Example of running Copilot or another review tool on your files
-          result=$(copilot review --repo . --output-format json)
-          echo "::set-output name=review_result::$result"
+          # Use a valid Copilot command instead of `review`
+          result=$(copilot svc deploy --name my-service --env test --output json)
+          echo "::set-output name=command_result::$result"
 
       # Check for any errors and report failure if needed
-      - name: Check for Review Errors
+      - name: Check for Command Errors
         run: |
-          if [[ "${{ steps.copilot_review.outputs.review_result }}" == *"error"* ]]; then
-            echo "Error found during Copilot review!"
+          if [[ "${{ steps.copilot_command.outputs.command_result }}" == *"error"* ]]; then
+            echo "Error found during Copilot command execution!"
             exit 1
-          else
-            echo "Copilot review passed successfully!"
+          else:
+            echo "Copilot command executed successfully!"
 
   handle_errors:
     runs-on: ubuntu-latest
@@ -56,5 +56,5 @@ jobs:
     steps:
       - name: Handle Errors
         run: |
-          echo "An error occurred during the Copilot review process!" | tee error_log.txt
+          echo "An error occurred during the Copilot command execution process!" | tee error_log.txt
           # Send a message or do any necessary error handling steps here, such as notifying on Slack, sending an email, etc.
