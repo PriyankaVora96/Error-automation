@@ -37,15 +37,15 @@ jobs:
         run: |
           # Use a valid Copilot command instead of `review`
           result=$(copilot svc deploy --name my-service --env test --output json)
-          echo "::set-output name=command_result::$result"
+          echo "command_result=$result" >> $GITHUB_ENV
 
       # Check for any errors and report failure if needed
       - name: Check for Command Errors
         run: |
-          if [[ "${{ steps.copilot_command.outputs.command_result }}" == *"error"* ]]; then
+          if [[ "${{ env.command_result }}" == *"error"* ]]; then
             echo "Error found during Copilot command execution!"
             exit 1
-          else:
+          else
             echo "Copilot command executed successfully!"
 
   handle_errors:
